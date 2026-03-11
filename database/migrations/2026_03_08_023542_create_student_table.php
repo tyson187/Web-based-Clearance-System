@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('student_name');
 
             $table->foreignId('department_id')
-                  ->constrained('departments','department_id')
+                  ->constrained('department','department_id')
                   ->cascadeOnDelete();
 
             $table->string('student_email')->unique();
