@@ -119,6 +119,14 @@ button:hover{
     margin-bottom:10px;
     color:red;
 }
+
+button[type="button"]{
+    background:#6c757d;
+}
+
+button[type="button"]:hover{
+    background:#5a6268;
+}
 </style>
 </head>
 
@@ -152,11 +160,16 @@ button:hover{
             </div>
 
             <button type="submit">Log in</button>
+
+<button type="button" onclick="window.location.href='register.php'" style="background:#6c757d; margin-top:10px;">
+    Register
+</button>
         </form>
 
-        <div class="extra">
-            Forgot Password? <a href="#">Click here</a>
-        </div>
+       <div class="extra">
+    Forgot Password? <a href="#">Click here</a><br>
+    Don't have an account? <a href="register.php">Register here</a>
+</div>
     </div>
 
 </div>
