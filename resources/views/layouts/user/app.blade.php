@@ -14,7 +14,7 @@
 
     <div class="flex min-h-screen">
 
-        
+        @include('partials.user._menu')
 
         <main class="flex-1 p-6">
             @yield('content')

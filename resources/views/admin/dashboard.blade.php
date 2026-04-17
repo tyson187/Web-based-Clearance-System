@@ -4,54 +4,46 @@
 
 @section('content')
 
-<h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
+<h2 class="text-2xl font-bold mb-4">Registrar</h2>
 
-<!-- CARDS -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-
-    <div class="bg-white p-4 rounded shadow">
-        <h3 class="text-gray-600">Total Students</h3>
-        <p class="text-2xl font-bold">120</p>
+<!-- PROFILE -->
+<div class="bg-white p-4 rounded shadow flex justify-between items-center mb-4">
+    <div>
+        <p class="font-bold">Last Name, First Name</p>
+        <p class="text-sm text-gray-500">email@example.com</p>
     </div>
 
-    <div class="bg-white p-4 rounded shadow">
-        <h3 class="text-gray-600">Pending</h3>
-        <p class="text-2xl font-bold text-yellow-500">35</p>
+    <div>
+        <input type="text" placeholder="Search Name/ID" class="border p-2 rounded">
+        <button class="bg-blue-500 text-white px-3 py-2 rounded">Search</button>
     </div>
-
-    <div class="bg-white p-4 rounded shadow">
-        <h3 class="text-gray-600">Approved</h3>
-        <p class="text-2xl font-bold text-green-500">70</p>
-    </div>
-
-    <div class="bg-white p-4 rounded shadow">
-        <h3 class="text-gray-600">Rejected</h3>
-        <p class="text-2xl font-bold text-red-500">15</p>
-    </div>
-
 </div>
 
 <!-- TABLE -->
-<div class="mt-8 bg-white rounded shadow p-4">
-    <h3 class="text-lg font-semibold mb-4">Recent Clearance Requests</h3>
-
+<div class="bg-white p-4 rounded shadow">
     <table class="w-full border">
         <thead class="bg-slate-800 text-white">
             <tr>
-                <th class="p-2 text-left">Student</th>
-                <th class="p-2 text-left">Department</th>
-                <th class="p-2 text-left">Status</th>
-                <th class="p-2 text-left">Date</th>
+                <th class="p-2">Student ID</th>
+                <th class="p-2">Student Name</th>
+                <th class="p-2">Course</th>
+                <th class="p-2">Status</th>
             </tr>
         </thead>
 
         <tbody>
-            <tr class="border-b">
-                <td class="p-2">Juan Dela Cruz</td>
-                <td class="p-2">IT</td>
-                <td class="p-2 text-yellow-500">Pending</td>
-                <td class="p-2">2026-03-28</td>
+        @foreach($students as $s)
+            <tr class="border-b text-center">
+                <td class="p-2">{{ $s->id }}</td>
+                <td class="p-2">{{ $s->name }}</td>
+                <td class="p-2">{{ $s->course }}</td>
+                <td class="p-2">
+                    <span class="bg-yellow-400 text-white px-2 py-1 rounded">
+                        Pending
+                    </span>
+                </td>
             </tr>
+        @endforeach
         </tbody>
     </table>
 </div>
