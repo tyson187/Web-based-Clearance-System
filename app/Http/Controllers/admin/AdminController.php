@@ -62,6 +62,7 @@ class AdminController extends Controller
     {
         $departments = [
             (object)['name' => 'Dean'],
+            (object)['name' => 'Data Center'],
             (object)['name' => 'Library'],
             (object)['name' => 'Accounting'],
             (object)['name' => 'Registrar']

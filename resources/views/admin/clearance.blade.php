@@ -17,7 +17,7 @@
             </tr>
         </thead>
 
-        @include('layouts.partials.admin.table-clearance')
+        @include('partials.admin.table-clearance')
 
     </table>
 </div>

@@ -1,45 +1,34 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Student')
+@section('title', 'Students')
 
 @section('content')
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<h2 class="text-2xl font-bold mb-4">Students List</h2>
 
-    <!-- PROFILE CARD -->
-    <div class="bg-white p-4 rounded shadow text-center">
-        <div class="w-24 h-24 mx-auto bg-gray-300 rounded-full mb-3"></div>
-
-        <h3 class="font-bold">SIGMA, ALEX A.</h3>
-        <p class="text-sm text-gray-500">2025-00021</p>
-
-        <div class="text-left mt-4 text-sm">
-            <p><b>Program:</b> BSIT</p>
-            <p><b>Year:</b> 4th Year</p>
-            <p><b>Email:</b> student@email.com</p>
-        </div>
-    </div>
-
-    <!-- CLEARANCE STATUS -->
-    <div class="md:col-span-2 bg-white p-4 rounded shadow">
-
-        @foreach($clearance as $c)
-        <div class="flex justify-between items-center border-b py-2">
-            <span>{{ $c->office }}</span>
-
-            <span class="
-                px-3 py-1 rounded text-white
-                @if($c->status == 'Approved') bg-green-500
-                @else bg-orange-500
-                @endif
-            ">
-                {{ $c->status }}
-            </span>
-        </div>
-        @endforeach
-
-    </div>
-
+<div class="bg-white p-4 rounded shadow">
+    <table class="w-full table-auto">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="p-2 text-left">ID</th>
+                <th class="p-2 text-left">Name</th>
+                <th class="p-2 text-left">Course</th>
+                <th class="p-2 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($students as $student)
+            <tr class="border-b">
+                <td class="p-2">{{ $student->id }}</td>
+                <td class="p-2">{{ $student->name }}</td>
+                <td class="p-2">{{ $student->course }}</td>
+                <td class="p-2">
+                    <a href="#" class="text-blue-500">View</a>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 
 @endsection

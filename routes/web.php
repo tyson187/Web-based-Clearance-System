@@ -45,6 +45,12 @@ Route::prefix('admin')
 
         Route::get('/clearance', [AdminController::class, 'clearance'])
             ->name('clearance');
+
+        Route::post('/clearance/approve/{id}', [AdminController::class, 'approve'])
+            ->name('clearance.approve');
+
+        Route::post('/clearance/reject/{id}', [AdminController::class, 'reject'])
+            ->name('clearance.reject');
     });
 
 

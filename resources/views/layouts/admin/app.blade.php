@@ -8,6 +8,7 @@
 
     {{-- Tailwind / CSS --}}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/app.css') }}">
 
     {{-- Optional: prevent flash of unstyled content --}}
     @stack('styles')
@@ -18,15 +19,13 @@
     {{-- HEADER --}}
     @include('partials.admin._header')
 
-    <div class="flex flex-1">
+    {{-- SIDEBAR --}}
+    <aside class="w-full bg-slate-900 text-white">
+        @include('partials.admin._sidebar')
+    </aside>
 
-        {{-- SIDEBAR --}}
-        <aside class="w-64 bg-slate-900 text-white min-h-full">
-            @include('partials.admin._sidebar')
-        </aside>
-
-        {{-- MAIN CONTENT --}}
-        <main class="flex-1 p-6 overflow-auto">
+    {{-- MAIN CONTENT --}}
+    <main class="flex-1 p-6 overflow-auto">
 
             {{-- SUCCESS / ERROR MESSAGES --}}
             @if(session('success'))
@@ -55,8 +54,7 @@
     let msg = type === 'approved' ? 'Approved' : 'Denied';
     alert(msg);
     }
-    <button onclick="showPopup('approved')" ...>
-    <button onclick="showPopup('denied')" ...>
+    
     </script>
 
     {{-- Optional JS --}}

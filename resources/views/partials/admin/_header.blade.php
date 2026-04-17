@@ -1,8 +1,6 @@
-<header class="bg-slate-800 text-white p-4 flex justify-between">
-    <h2 class="font-bold">WEB-BASED CLEARANCE SYSTEM</h2>
-
+<header class="bg-slate-800 text-white p-4 relative">
     @if(session('admin_logged_in'))
-        <div class="flex gap-4 items-center">
+        <div class="header-left flex gap-4 items-center">
             <span>Admin: {{ session('admin_name') }}</span>
 
             <form method="POST" action="{{ route('logout') }}">
@@ -11,4 +9,8 @@
             </form>
         </div>
     @endif
+
+    <div class="header-center text-center">
+        <h2 class="font-bold">WEB-BASED CLEARANCE SYSTEM</h2>
+    </div>
 </header>
