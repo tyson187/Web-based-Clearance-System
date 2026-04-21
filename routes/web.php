@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,9 +53,20 @@ Route::middleware('auth')->group(function () {
 */
 
 Route::middleware('department.auth')->group(function () {
-    Route::get('/department/dashboard', function () {
-        return view('department.dashboard');
-    })->name('department.dashboard');
+    Route::get('/department/dashboard', [DepartmentController::class, 'dashboard'])
+        ->name('department.dashboard');
+    
+    Route::get('/department/engineering', [DepartmentController::class, 'engineering'])
+        ->name('department.engineering');
+    
+    Route::get('/department/search', [DepartmentController::class, 'searchStudents'])
+        ->name('department.search');
+    
+    Route::post('/department/clearance/approve/{id}', [DepartmentController::class, 'approveClearance'])
+        ->name('department.clearance.approve');
+    
+    Route::post('/department/clearance/reject/{id}', [DepartmentController::class, 'rejectClearance'])
+        ->name('department.clearance.reject');
 });
 
 

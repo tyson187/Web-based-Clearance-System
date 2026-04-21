@@ -15,6 +15,10 @@ class DepartmentAdminSeeder extends Seeder
      */
     public function run(): void
     {
+        // Clear existing records (delete in correct order due to foreign keys)
+        Admin::query()->delete();
+        Department::query()->delete();
+
         // Create sample departments with static passwords
         $departments = [
             [
@@ -31,6 +35,11 @@ class DepartmentAdminSeeder extends Seeder
                 'department_name' => 'Business Department',
                 'department_email' => 'business@benedicto.edu',
                 'department_password' => Hash::make('business_dept_2026'),
+            ],
+            [
+                'department_name' => 'Education Department',
+                'department_email' => 'educ@benedicto.edu',
+                'department_password' => Hash::make('educ_dept_2026'),
             ],
         ];
 
@@ -67,6 +76,15 @@ class DepartmentAdminSeeder extends Seeder
                 'can_approve_clearance' => true,
                 'can_add_remarks' => true,
             ],
+            [
+                'admin_name' => 'Dr. Angela Cruz',
+                'admin_email' => 'angela.cruz@benedicto.edu',
+                'admin_password' => Hash::make('admin_2026'),
+                'department_id' => 4,
+                'can_edit_status' => true,
+                'can_approve_clearance' => true,
+                'can_add_remarks' => true,
+            ],
         ];
 
         foreach ($admins as $admin) {
@@ -78,9 +96,11 @@ class DepartmentAdminSeeder extends Seeder
         echo "- Email: cs@benedicto.edu | Password: cs_dept_2026\n";
         echo "- Email: eng@benedicto.edu | Password: eng_dept_2026\n";
         echo "- Email: business@benedicto.edu | Password: business_dept_2026\n";
+        echo "- Email: educ@benedicto.edu | Password: educ_dept_2026\n";
         echo "\nAdmin Credentials:\n";
         echo "- Email: john.smith@benedicto.edu | Password: admin_2026\n";
         echo "- Email: maria.garcia@benedicto.edu | Password: admin_2026\n";
         echo "- Email: robert.johnson@benedicto.edu | Password: admin_2026\n";
+        echo "- Email: angela.cruz@benedicto.edu | Password: admin_2026\n";
     }
 }
