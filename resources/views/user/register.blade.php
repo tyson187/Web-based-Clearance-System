@@ -2,6 +2,7 @@
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     $student_id = $_POST['student_id'];
     $username = $_POST['username'];
     $email = $_POST['email'];
@@ -10,11 +11,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Simple validation
+    // VALIDATION
     if ($password !== $confirm_password) {
         $message = "Passwords do not match!";
     } else {
-        // TEMPORARY success (replace with database later)
+        // HASH PASSWORD (important!)
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        // FOR NOW: just success message
+        // (later we connect this to MySQL)
         $message = "Registration successful!";
     }
 }
@@ -32,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family: 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', sans-serif;
 }
 
 body{
@@ -40,34 +45,34 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1') no-repeat center center/cover;
+    background:#e3f2fd;
 }
 
 .container{
-    width:900px;
-    height:500px;
+    width:800px;
     display:flex;
-    border-radius:20px;
+    border-radius:12px;
     overflow:hidden;
-    backdrop-filter: blur(10px);
+    background:white;
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
 }
 
 .left{
     flex:1;
+    background:#bbdefb;
     display:flex;
     justify-content:center;
     align-items:center;
 }
 
-.left img{
-    width:300px;
+.left h2{
+    color:#0d47a1;
 }
 
 .right{
     flex:1;
-    background: rgba(255,255,255,0.85);
     padding:30px;
-    border-radius:20px;
+    background:#f5f5f5;
 }
 
 .right h1{
@@ -89,10 +94,10 @@ body{
 .input-box input{
     width:100%;
     padding:8px;
-    border:none;
-    border-bottom:2px solid #ccc;
+    border:1px solid #ccc;
+    border-radius:6px;
     outline:none;
-    background:transparent;
+    margin-top:3px;
 }
 
 .row{
@@ -109,22 +114,25 @@ button{
     padding:12px;
     margin-top:15px;
     border:none;
-    border-radius:8px;
-    background:#1e4fbf;
+    border-radius:6px;
+    background:#64b5f6;
     color:white;
     font-weight:bold;
     cursor:pointer;
 }
 
 button:hover{
-    background:#0d47a1;
+    background:#42a5f5;
 }
 
-/* MESSAGE */
 .message{
     margin-bottom:10px;
     font-size:14px;
     color:red;
+    text-align:center;
+}
+.success{
+    color:green;
 }
 </style>
 
@@ -135,7 +143,7 @@ button:hover{
 <div class="container">
 
     <div class="left">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/768px-Placeholder_view_vector.svg.png" alt="Logo">
+        <h2>Welcome 🎓</h2>
     </div>
 
     <div class="right">
@@ -143,7 +151,9 @@ button:hover{
 
         <!-- MESSAGE -->
         <?php if($message != ""): ?>
-            <div class="message"><?php echo $message; ?></div>
+            <div class="message <?php echo ($message == 'Registration successful!') ? 'success' : ''; ?>">
+                <?php echo $message; ?>
+            </div>
         <?php endif; ?>
 
         <form method="POST">
