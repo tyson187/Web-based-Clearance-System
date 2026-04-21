@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Admin;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -15,28 +19,82 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'username' => 'required',
+        $request->validate([
+            'role' => 'required|in:user,admin,department',
+            'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        // TEMP AUTH (NO DB YET)
-        if (
-            $credentials['username'] === 'admin' &&
-            $credentials['password'] === '1234'
-        ) {
-            $request->session()->put('admin_logged_in', true);
-            $request->session()->put('admin_name', 'Administrator');
+        $role = $request->input('role');
+        $email = $request->input('email');
+        $password = $request->input('password');
 
-            return redirect()->route('admin.dashboard');
+        if ($role === 'user') {
+            return $this->loginUser($request, $email, $password);
+        } elseif ($role === 'admin') {
+            return $this->loginAdmin($request, $email, $password);
+        } elseif ($role === 'department') {
+            return $this->loginDepartment($request, $email, $password);
         }
 
-        return back()->with('error', 'Invalid credentials');
+        return back()->with('error', 'Invalid role');
+    }
+
+    protected function loginUser(Request $request, $email, $password)
+    {
+        $user = User::where('email', $email)->first();
+
+        if (!$user || !Hash::check($password, $user->password)) {
+            return back()->withInput($request->only('email'))->with('error', 'Invalid email or password');
+        }
+
+        // Login the user using Laravel's auth
+        Auth::login($user);
+        $request->session()->put('user_role', 'user');
+        $request->session()->put('user_type', $user->user_type);
+
+        return redirect()->intended('/dashboard'); // Update this route as needed
+    }
+
+    protected function loginAdmin(Request $request, $email, $password)
+    {
+        $admin = Admin::where('admin_email', $email)->first();
+
+        if (!$admin || !Hash::check($password, $admin->admin_password)) {
+            return back()->withInput($request->only('email'))->with('error', 'Invalid admin email or password');
+        }
+
+        $request->session()->put('admin_logged_in', true);
+        $request->session()->put('admin_id', $admin->admin_id);
+        $request->session()->put('admin_name', $admin->admin_name);
+        $request->session()->put('admin_department_id', $admin->department_id);
+        $request->session()->put('user_role', 'admin');
+
+        return redirect()->route('admin.dashboard');
+    }
+
+    protected function loginDepartment(Request $request, $email, $password)
+    {
+        $department = Department::where('department_email', $email)->first();
+
+        if (!$department || !Hash::check($password, $department->department_password)) {
+            return back()->withInput($request->only('email'))->with('error', 'Invalid department email or password');
+        }
+
+        $request->session()->put('department_logged_in', true);
+        $request->session()->put('department_id', $department->department_id);
+        $request->session()->put('department_name', $department->department_name);
+        $request->session()->put('user_role', 'department');
+
+        return redirect('/department/dashboard'); // Update this route as needed
     }
 
     public function logout(Request $request)
     {
+        Auth::logout();
         $request->session()->flush();
-        return redirect()->route('login');
+        $request->session()->regenerate();
+        
+        return redirect()->route('login')->with('success', 'Logged out successfully');
     }
 }

@@ -6,6 +6,7 @@
     <title>@yield('title')</title>
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/department/app.css') }}">
 </head>
 
 <body class="bg-gray-100">

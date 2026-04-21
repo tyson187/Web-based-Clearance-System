@@ -4,12 +4,12 @@
     <div class="flex items-center gap-4">
 
         <span>
-            @if(auth('admin')->check())
-                Admin: {{ auth('admin')->user()->name }}
-            @elseif(auth('student')->check())
-                Student: {{ auth('student')->user()->name }}
-            @elseif(auth('department')->check())
-                Department: {{ auth('department')->user()->department_name }}
+            @if(session('admin_logged_in'))
+                Admin: {{ session('admin_name') }}
+            @elseif(auth()->check())
+                User: {{ auth()->user()->name }}
+            @elseif(session('department_logged_in'))
+                Department: {{ session('department_name') }}
             @endif
         </span>
 

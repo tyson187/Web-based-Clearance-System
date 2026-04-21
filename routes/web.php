@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,43 @@ Route::get('/login', [LoginController::class, 'showLogin'])
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login.post');
 
+// Register page
+Route::get('/register', [RegisterController::class, 'showRegister'])
+    ->name('register');
+
+// Register form submission
+Route::post('/register', [RegisterController::class, 'register'])
+    ->name('register.post');
+
 // Logout
 Route::post('/logout', [LoginController::class, 'logout'])
     ->name('logout');
+
+
+/*
+|--------------------------------------------------------------------------
+| USER ROUTES (PROTECTED BY AUTH MIDDLEWARE)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('user.dashboard');
+    })->name('dashboard');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| DEPARTMENT ROUTES (PROTECTED BY DEPARTMENT.AUTH MIDDLEWARE)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('department.auth')->group(function () {
+    Route::get('/department/dashboard', function () {
+        return view('department.dashboard');
+    })->name('department.dashboard');
+});
 
 
 /*
