@@ -86,7 +86,19 @@ class LoginController extends Controller
         $request->session()->put('department_name', $department->department_name);
         $request->session()->put('user_role', 'department');
 
-        return redirect('/department/dashboard'); // Update this route as needed
+        // Redirect to appropriate department dashboard based on department name
+        if (stripos($department->department_name, 'Business') !== false || stripos($department->department_email, 'business') !== false) {
+            return redirect('/department/cbm');
+        } elseif (stripos($department->department_name, 'Computer Science') !== false || stripos($department->department_email, 'cs') !== false) {
+            return redirect('/department/css');
+        } elseif (stripos($department->department_name, 'Engineering') !== false || stripos($department->department_email, 'eng') !== false) {
+            return redirect('/department/engineering');
+        } elseif (stripos($department->department_name, 'Education') !== false || stripos($department->department_email, 'educ') !== false) {
+            return redirect('/department/educ');
+        }
+
+        // Default fallback
+        return redirect('/department/dashboard');
     }
 
     public function logout(Request $request)

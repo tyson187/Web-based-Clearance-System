@@ -1,20 +1,20 @@
 <?php
-// SAMPLE USER (ADMIN/STAFF)
-$name = "Cueva, Jene-Paul";
-$email = "jene-paulcueva@gmail.com";
+// STAFF INFO
+$name = session('department_name') ?? "Dr. Johnson";
+$email = session('department_email') ?? "educ@benedicto.edu";
 
-// SAMPLE STUDENT DATA (replace with database later)
-$students = [
-    ["id" => "2025-00021", "name" => "SIGMA, ALEX", "course" => "BS INFORMATION", "status" => "PENDING"],
-    ["id" => "2025-00022", "name" => "CRUZ, JUAN", "course" => "BS IT", "status" => "APPROVED"],
-    ["id" => "2025-00023", "name" => "DELA CRUZ, MARIA", "course" => "BS CS", "status" => "PENDING"]
+// DEFAULT STUDENTS (if session empty)
+$defaultStudents = [
+    ["id"=>"2025-00051","name"=>"TORRES, ANTONIO","course"=>"BS EDUCATION","status"=>"PENDING"],
+    ["id"=>"2025-00052","name"=>"RIVERA, ISABEL","course"=>"BS EDUCATION","status"=>"APPROVED"],
+    ["id"=>"2025-00053","name"=>"SANTOS, PABLO","course"=>"BS EDUCATION","status"=>"PENDING"],
 ];
 
-// SEARCH FUNCTION
-$search = "";
-if (isset($_GET['search'])) {
-    $search = $_GET['search'];
-}
+// USE SESSION DATA
+$students = session('students', $defaultStudents);
+
+// SEARCH
+$search = request('search') ?? "";
 ?>
 
 <!DOCTYPE html>
@@ -22,159 +22,57 @@ if (isset($_GET['search'])) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Department Panel</title>
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI', sans-serif;
-}
-
-.header{
-    background:#062a4d;
-    color:white;
-    padding:15px 30px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.header .logo{
-    font-size:22px;
-    font-weight:bold;
-}
-
-.logout{
-    border:2px solid #6ea8fe;
-    padding:10px 20px;
-    border-radius:10px;
-    cursor:pointer;
-}
-
-.title{
-    background:#1e4fbf;
-    color:white;
-    text-align:center;
-    padding:10px;
-    font-weight:bold;
-}
-
-.container{
-    padding:20px;
-    background:#f0f0f0;
-    min-height:90vh;
-}
-
-.profile{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.profile img{
-    width:60px;
-    height:60px;
-    border-radius:50%;
-}
-
-.search-box{
-    display:flex;
-    justify-content:flex-end;
-    margin-bottom:10px;
-}
-
-.search-box input{
-    padding:8px;
-    width:250px;
-    border:none;
-    border-radius:5px 0 0 5px;
-}
-
-.search-box button{
-    padding:8px 15px;
-    border:none;
-    background:#1e4fbf;
-    color:white;
-    border-radius:0 20px 20px 0;
-    cursor:pointer;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:white;
-}
-
-th, td{
-    border:1px solid #ccc;
-    padding:10px;
-}
-
-th{
-    background:#e0e0e0;
-}
-
-.status{
-    padding:5px 12px;
-    border-radius:15px;
-    color:white;
-    font-size:12px;
-}
-
-/* STATUS COLORS */
-.pending{ background:#ff7a1a; }
-.approved{ background:green; }
-</style>
-
+<title>Department of Education</title>
+<link rel="stylesheet" href="{{ asset('css/department/deanEDUC.css') }}">
 </head>
 
 <body>
 
-<div class="header">
-    <div class="logo">BC BENEDICTO COLLEGE</div>
-    <div class="logout" onclick="window.location.href='login.php'">Log Out</div>
+<h1>DEPARTMENT OF EDUCATION</h1>
+
+<div class="navbar">
+    <button onclick="window.location.href='/login'">Logout</button>
 </div>
 
-<div class="title">DEPARTMENT OF EDUCATION</div>
-
-<div class="container">
-
-    <!-- PROFILE -->
-    <div class="profile">
-        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
-        <div>
-            <h3><?php echo $name; ?></h3>
-            <p>email: <?php echo $email; ?></p>
+<div class="dashboard">
+    <h2>Welcome, <?php echo $name; ?></h2>
+    
+    <!-- STATISTICS -->
+    <div class="statistics">
+        <div class="stat">
+            <h3>Total Clearances</h3>
+            <p><?php echo count($students); ?></p>
+        </div>
+        <div class="stat">
+            <h3>Email</h3>
+            <p><?php echo $email; ?></p>
         </div>
     </div>
 
     <!-- SEARCH -->
-    <form method="GET" class="search-box">
+    <form method="GET" style="margin-bottom: 20px;">
         <input type="text" name="search" placeholder="Search Name/ID" value="<?php echo $search; ?>">
         <button type="submit">Search</button>
     </form>
 
     <!-- TABLE -->
-    <table>
-        <tr>
-            <th>School ID</th>
-            <th>Student Name</th>
-            <th>Course</th>
-            <th>Status</th>
-        </tr>
+    <table class="pending-requests">
+        <thead>
+            <tr>
+                <th>School ID</th>
+                <th>Student Name</th>
+                <th>Course</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($students as $student): 
 
-        <?php
-        foreach ($students as $student) {
-
-            // SEARCH FILTER
             if ($search != "" && stripos($student['name'], $search) === false && stripos($student['id'], $search) === false) {
                 continue;
             }
 
-            // STATUS STYLE
             $statusClass = strtolower($student['status']);
         ?>
 
@@ -187,13 +85,36 @@ th{
                     <?php echo $student['status']; ?>
                 </span>
             </td>
+            <td class="actions">
+                <?php if($student['status'] == "PENDING"): ?>
+
+                <!-- APPROVE -->
+                <form method="POST" action="/update-status/<?php echo $student['id']; ?>" style="display:inline;">
+                    <?php echo csrf_field(); ?>
+                    <input type="hidden" name="status" value="APPROVED">
+                    <a class="approve" onclick="this.parentElement.submit(); return false;">Approve</a>
+                </form>
+
+                <!-- REJECT -->
+                <form method="POST" action="/update-status/<?php echo $student['id']; ?>" style="display:inline;">
+                    <?php echo csrf_field(); ?>
+                    <input type="hidden" name="status" value="REJECTED">
+                    <a class="reject" onclick="this.parentElement.submit(); return false;">Reject</a>
+                </form>
+
+                <?php endif; ?>
+            </td>
         </tr>
 
-        <?php } ?>
-
+        <?php endforeach; ?>
+        </tbody>
     </table>
 
 </div>
+
+<footer>
+    <p>&copy; 2026 Web-Based Clearance System. All rights reserved.</p>
+</footer>
 
 </body>
 </html>

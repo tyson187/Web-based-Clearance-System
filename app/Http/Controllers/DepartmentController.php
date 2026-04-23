@@ -49,11 +49,119 @@ class DepartmentController extends Controller
     }
 
     /**
+     * Show CBM (College of Business and Management) Department Dashboard
+     */
+    public function cbm()
+    {
+        $name = session('department_name') ?? 'Zoilo, Jaype';
+        $email = session('department_email') ?? 'jaypezoilo@gmail.com';
+        
+        $students = [
+            [
+                'id' => '2025-00045',
+                'name' => 'DELA CRUZ, JUAN',
+                'course' => 'BSBA',
+                'status' => 'PENDING'
+            ],
+            [
+                'id' => '2025-00046',
+                'name' => 'SANTOS, MARIA',
+                'course' => 'BSBA',
+                'status' => 'APPROVED'
+            ],
+            [
+                'id' => '2025-00047',
+                'name' => 'GARCIA, PEDRO',
+                'course' => 'BSBA',
+                'status' => 'PENDING'
+            ]
+        ];
+
+        return view('department.deanCBM', [
+            'name' => $name,
+            'email' => $email,
+            'students' => $students
+        ]);
+    }
+
+    /**
      * Show Department Dashboard
      */
     public function dashboard()
     {
         return view('department.dashboard');
+    }
+
+    /**
+     * Show CSS (Computer Science) Department Dashboard
+     */
+    public function css()
+    {
+        $name = session('department_name') ?? 'Dr. Smith';
+        $email = session('department_email') ?? 'cs@benedicto.edu';
+        
+        $students = [
+            [
+                'id' => '2025-00001',
+                'name' => 'REYES, CARLOS',
+                'course' => 'BS COMPUTER SCIENCE',
+                'status' => 'PENDING'
+            ],
+            [
+                'id' => '2025-00002',
+                'name' => 'MANUEL, JOSE',
+                'course' => 'BS COMPUTER SCIENCE',
+                'status' => 'APPROVED'
+            ],
+            [
+                'id' => '2025-00003',
+                'name' => 'GARCIA, LUIS',
+                'course' => 'BS COMPUTER SCIENCE',
+                'status' => 'PENDING'
+            ]
+        ];
+
+        return view('department.deanCSS', [
+            'name' => $name,
+            'email' => $email,
+            'students' => $students
+        ]);
+    }
+
+    /**
+     * Show EDUC (Education) Department Dashboard
+     */
+    public function educ()
+    {
+        $name = session('department_name') ?? 'Dr. Johnson';
+        $email = session('department_email') ?? 'educ@benedicto.edu';
+        
+        $students = [
+            [
+                'id' => '2025-00051',
+                'name' => 'TORRES, ANTONIO',
+                'course' => 'BS EDUCATION',
+                'status' => 'PENDING'
+            ],
+            [
+                'id' => '2025-00052',
+                'name' => 'RIVERA, ISABEL',
+                'course' => 'BS EDUCATION',
+                'status' => 'APPROVED'
+            ],
+            [
+                'id' => '2025-00053',
+                'name' => 'SANTOS, PABLO',
+                'course' => 'BS EDUCATION',
+                'status' => 'PENDING'
+            ]
+        ];
+
+        return view('department.deanEDUC', [
+            'name' => $name,
+            'email' => $email,
+            'students' => $students
+        ]);
     }
 
     /**

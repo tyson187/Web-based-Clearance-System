@@ -1,27 +1,62 @@
-@extends('layouts.department.app')
+<?php
+// STAFF INFO
+$name = session('department_name') ?? "Dr. Johnson";
+$email = session('department_email') ?? "eng@benedicto.edu";
 
-@section('content')
-<div class="title">COLLEGE OF ENGINEERING</div>
+// DEFAULT STUDENTS (if session empty)
+$defaultStudents = [
+    ["id"=>"2025-00051","name"=>"TORRES, ANTONIO","course"=>"BS ENGINEERING","status"=>"PENDING"],
+    ["id"=>"2025-00052","name"=>"RIVERA, ISABEL","course"=>"BS ENGINEERING","status"=>"APPROVED"],
+    ["id"=>"2025-00053","name"=>"SANTOS, PABLO","course"=>"BS ENGINEERING","status"=>"PENDING"],
+];
 
-<div class="container">
+// USE SESSION DATA
+$students = session('students', $defaultStudents);
 
-    <!-- PROFILE -->
-    <div class="profile">
-        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile">
-        <div>
-            <h3>{{ $name ?? 'Santos, Pedro' }}</h3>
-            <p>email: {{ $email ?? 'pedro.santos@gmail.com' }}</p>
+// SEARCH
+$search = request('search') ?? "";
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Department of Engineering</title>
+<link rel="stylesheet" href="{{ asset('css/department/deanENG.css') }}">
+</head>
+
+<body>
+
+<h1>DEPARTMENT OF ENGINEERING</h1>
+
+<div class="navbar">
+    <button onclick="window.location.href='/login'">Logout</button>
+</div>
+
+<div class="dashboard">
+    <h2>Welcome, <?php echo $name; ?></h2>
+    
+    <!-- STATISTICS -->
+    <div class="statistics">
+        <div class="stat">
+            <h3>Total Clearances</h3>
+            <p><?php echo count($students); ?></p>
+        </div>
+        <div class="stat">
+            <h3>Email</h3>
+            <p><?php echo $email; ?></p>
         </div>
     </div>
 
     <!-- SEARCH -->
-    <form method="GET" class="search-box" action="{{ route('department.search') }}">
-        <input type="text" name="search" placeholder="Search Name/ID" value="{{ request('search', '') }}">
+    <form method="GET" style="margin-bottom: 20px;">
+        <input type="text" name="search" placeholder="Search Name/ID" value="<?php echo $search; ?>">
         <button type="submit">Search</button>
     </form>
 
     <!-- TABLE -->
-    <table>
+    <table class="pending-requests">
         <thead>
             <tr>
                 <th>School ID</th>
@@ -32,155 +67,54 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($students as $student)
-                <tr>
-                    <td>{{ $student['id'] }}</td>
-                    <td>{{ $student['name'] }}</td>
-                    <td>{{ $student['course'] }}</td>
-                    <td>
-                        <span class="status {{ strtolower($student['status']) }}">
-                            {{ $student['status'] }}
-                        </span>
-                    </td>
-                    <td>
-                        <form method="POST" style="display:inline;">
-                            @csrf
-                            @if($student['status'] === 'PENDING')
-                                <button type="submit" formaction="{{ route('department.clearance.approve', $student['id']) }}" class="btn-approve">Approve</button>
-                                <button type="submit" formaction="{{ route('department.clearance.reject', $student['id']) }}" class="btn-reject">Reject</button>
-                            @else
-                                <span class="text-muted">—</span>
-                            @endif
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="text-center text-muted">No students found</td>
-                </tr>
-            @endforelse
+        <?php foreach ($students as $student): 
+
+            if ($search != "" && stripos($student['name'], $search) === false && stripos($student['id'], $search) === false) {
+                continue;
+            }
+
+            $statusClass = strtolower($student['status']);
+        ?>
+
+        <tr>
+            <td><?php echo $student['id']; ?></td>
+            <td><?php echo $student['name']; ?></td>
+            <td><?php echo $student['course']; ?></td>
+            <td>
+                <span class="status <?php echo $statusClass; ?>">
+                    <?php echo $student['status']; ?>
+                </span>
+            </td>
+            <td class="actions">
+                <?php if($student['status'] == "PENDING"): ?>
+
+                <!-- APPROVE -->
+                <form method="POST" action="/update-status/<?php echo $student['id']; ?>" style="display:inline;">
+                    <?php echo csrf_field(); ?>
+                    <input type="hidden" name="status" value="APPROVED">
+                    <a class="approve" onclick="this.parentElement.submit(); return false;">Approve</a>
+                </form>
+
+                <!-- REJECT -->
+                <form method="POST" action="/update-status/<?php echo $student['id']; ?>" style="display:inline;">
+                    <?php echo csrf_field(); ?>
+                    <input type="hidden" name="status" value="REJECTED">
+                    <a class="reject" onclick="this.parentElement.submit(); return false;">Reject</a>
+                </form>
+
+                <?php endif; ?>
+            </td>
+        </tr>
+
+        <?php endforeach; ?>
         </tbody>
     </table>
 
 </div>
 
-<style>
-    .title {
-        background: #1e4fbf;
-        color: white;
-        text-align: center;
-        padding: 10px;
-        font-weight: bold;
-    }
+<footer>
+    <p>&copy; 2026 Web-Based Clearance System. All rights reserved.</p>
+</footer>
 
-    .container {
-        padding: 20px;
-        background: #f0f0f0;
-        min-height: 90vh;
-    }
-
-    .profile {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-
-    .profile img {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-    }
-
-    .search-box {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 10px;
-        gap: 0;
-    }
-
-    .search-box input {
-        padding: 8px;
-        width: 250px;
-        border: none;
-        border-radius: 5px 0 0 5px;
-    }
-
-    .search-box button {
-        padding: 8px 15px;
-        border: none;
-        background: #1e4fbf;
-        color: white;
-        border-radius: 0 20px 20px 0;
-        cursor: pointer;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        background: white;
-    }
-
-    th, td {
-        border: 1px solid #ccc;
-        padding: 10px;
-        text-align: left;
-    }
-
-    th {
-        background: #e0e0e0;
-        font-weight: bold;
-    }
-
-    .status {
-        padding: 5px 12px;
-        border-radius: 15px;
-        color: white;
-        font-size: 12px;
-        display: inline-block;
-    }
-
-    .status.pending {
-        background: #ff7a1a;
-    }
-
-    .status.approved {
-        background: #28a745;
-    }
-
-    .btn-approve {
-        background: #28a745;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-right: 5px;
-    }
-
-    .btn-approve:hover {
-        background: #218838;
-    }
-
-    .btn-reject {
-        background: #dc3545;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .btn-reject:hover {
-        background: #c82333;
-    }
-
-    .text-muted {
-        color: #999;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-</style>
-@endsection
+</body>
+</html>

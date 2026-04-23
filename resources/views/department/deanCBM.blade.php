@@ -23,48 +23,52 @@ $search = request('search') ?? "";
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Department of Business and Management</title>
-@vite('resources/css/deanCBM.css')
+<link rel="stylesheet" href="{{ asset('css/department/deanCBM.css') }}">
 </head>
 
 <body>
 
-<div class="header">
-    <div class="logo">WEB-BASED CLEARANCE SYSTEM</div>
-    <div class="logout" onclick="window.location.href='/login'">Logout</div>
+<h1>DEPARTMENT OF BUSINESS AND MANAGEMENT</h1>
+
+<div class="navbar">
+    <button onclick="window.location.href='/login'">Logout</button>
 </div>
 
-<div class="title">DEPARTMENT OF BUSINESS AND MANAGEMENT</div>
-
-<div class="container">
-
-    <!-- PROFILE -->
-    <div class="profile">
-
-        <div class="profile-left">
-            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
-            <div>
-                <h3><?php echo $name; ?></h3>
-                <p>Email: <?php echo $email; ?></p>
-            </div>
+<div class="dashboard">
+    <h2>Welcome, <?php echo $name; ?></h2>
+    
+    <!-- STATISTICS -->
+    <div class="statistics">
+        <div class="stat">
+            <h3>Total Clearances</h3>
+            <p><?php echo count($students); ?></p>
         </div>
-
-        <!-- SEARCH -->
-        <form method="GET" class="search-box">
-            <input type="text" name="search" placeholder="Search Name/ID" value="<?php echo $search; ?>">
-            <button type="submit">Search</button>
-        </form>
-
+        <div class="stat">
+            <h3>Email</h3>
+            <p><?php echo $email; ?></p>
+        </div>
     </div>
 
-    <!-- TABLE -->
-    <table>
-        <tr>
-            <th>School ID</th>
-            <th>Student Name</th>
-            <th>Course</th>
-            <th>Status / Actions</th>
-        </tr>
+    <!-- SEARCH -->
+    <form method="GET" style="margin-bottom: 20px;">
+        <input type="text" name="search" placeholder="Search Name/ID" value="<?php echo $search; ?>">
+        <button type="submit">Search</button>
+    </form>
 
+    <!-- TABLE -->
+    <table class="pending-requests">
+        <thead>
+            <tr>
+                <th>School ID</th>
+                <th>Student Name</th>
+                <th>Course</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        <tbody>
         <?php foreach ($students as $student): 
 
             if ($search != "" && stripos($student['name'], $search) === false && stripos($student['id'], $search) === false) {
@@ -78,26 +82,26 @@ $search = request('search') ?? "";
             <td><?php echo $student['id']; ?></td>
             <td><?php echo $student['name']; ?></td>
             <td><?php echo $student['course']; ?></td>
-
             <td>
-                <span class="<?php echo $statusClass; ?>">
+                <span class="status <?php echo $statusClass; ?>">
                     <?php echo $student['status']; ?>
                 </span>
-
+            </td>
+            <td class="actions">
                 <?php if($student['status'] == "PENDING"): ?>
 
                 <!-- APPROVE -->
                 <form method="POST" action="/update-status/<?php echo $student['id']; ?>" style="display:inline;">
                     <?php echo csrf_field(); ?>
                     <input type="hidden" name="status" value="APPROVED">
-                    <button class="approve-btn">Approve</button>
+                    <a class="approve" onclick="this.parentElement.submit(); return false;">Approve</a>
                 </form>
 
                 <!-- REJECT -->
                 <form method="POST" action="/update-status/<?php echo $student['id']; ?>" style="display:inline;">
                     <?php echo csrf_field(); ?>
                     <input type="hidden" name="status" value="REJECTED">
-                    <button class="reject-btn">Reject</button>
+                    <a class="reject" onclick="this.parentElement.submit(); return false;">Reject</a>
                 </form>
 
                 <?php endif; ?>
@@ -105,10 +109,14 @@ $search = request('search') ?? "";
         </tr>
 
         <?php endforeach; ?>
-
+        </tbody>
     </table>
 
 </div>
+
+<footer>
+    <p>&copy; 2026 Web-Based Clearance System. All rights reserved.</p>
+</footer>
 
 </body>
 </html>

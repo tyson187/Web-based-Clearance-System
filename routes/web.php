@@ -56,6 +56,15 @@ Route::middleware('department.auth')->group(function () {
     Route::get('/department/dashboard', [DepartmentController::class, 'dashboard'])
         ->name('department.dashboard');
     
+    Route::get('/department/cbm', [DepartmentController::class, 'cbm'])
+        ->name('department.cbm');
+    
+    Route::get('/department/css', [DepartmentController::class, 'css'])
+        ->name('department.css');
+    
+    Route::get('/department/educ', [DepartmentController::class, 'educ'])
+        ->name('department.educ');
+    
     Route::get('/department/engineering', [DepartmentController::class, 'engineering'])
         ->name('department.engineering');
     
