@@ -42,7 +42,7 @@ $search = request('search') ?? "";
         </div>
         <div class="stat">
             <h3>Email</h3>
-            <p><?php echo $email; ?></p>
+            <p>{{ session('dept_email', 'No email found') }}</p>
         </div>
     </div>
 

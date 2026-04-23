@@ -140,7 +140,7 @@ th{
 
 <div class="header">
     <div class="logo">BC BENEDICTO COLLEGE</div>
-    <div class="logout" onclick="window.location.href='login.php'">Log Out</div>
+    <button onclick="window.location.href='/login'">Logout</button>
 </div>
 
 <div class="title">LIBRARY</div>

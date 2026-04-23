@@ -163,6 +163,39 @@ class DepartmentController extends Controller
             'students' => $students
         ]);
     }
+
+    public function library()
+    {
+        $name = session('department_name') ?? 'Dr. Angela Cruz';
+        $email = session('department_email') ?? 'library@benedicto.edu';
+        
+        $students = [
+            [
+                'id' => '2025-00001',
+                'name' => 'REYES, CARLOS',
+                'course' => 'BS COMPUTER SCIENCE',
+                'status' => 'PENDING'
+            ],
+            [
+                'id' => '2025-00002',
+                'name' => 'MANUEL, JOSE',
+                'course' => 'BS COMPUTER SCIENCE',
+                'status' => 'APPROVED'
+            ],
+            [
+                'id' => '2025-00003',
+                'name' => 'GARCIA, LUIS',
+                'course' => 'BS COMPUTER SCIENCE',
+                'status' => 'PENDING'
+            ]
+        ];
+
+        return view('department.library', [
+            'name' => $name,
+            'email' => $email,
+            'students' => $students
+        ]);
+    }
     
     /**
      * Search students
