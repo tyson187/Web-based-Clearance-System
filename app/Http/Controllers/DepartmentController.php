@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    /**
+    /**     
      * Show Engineering Department Dashboard
      */
     public function engineering()
@@ -163,7 +163,7 @@ class DepartmentController extends Controller
             'students' => $students
         ]);
     }
-
+    
     /**
      * Search students
      */
